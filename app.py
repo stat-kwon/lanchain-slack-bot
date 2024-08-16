@@ -14,7 +14,7 @@ from langchain_core.outputs import LLMResult
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from slack_bolt import App
-from slack_bolt.adapter.google_cloud_functions import SlackRequestHandler
+from slack_bolt.adapter.aws_lambda import SlackRequestHandler
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 CHAT_UPDATE_INTERVAL_SEC = 1
@@ -77,7 +77,7 @@ class SlackStreamingCallbackHandler(BaseCallbackHandler):
         )
 
 
-# @app.event("app_mention")
+@app.event("app_mention")
 def handle_mention(event, say):
     channel = event["channel"]
     thread_ts = event["ts"]
@@ -86,7 +86,7 @@ def handle_mention(event, say):
     # 게시글의 키(=Momento 키): 첫 번째=event["ts"], 그 이후 = event["thread_ts"]
     id_ts = event["ts"]
     if "thread_ts" in event:
-        id_ts = event["thead_ts"]
+        id_ts = event["thread_ts"]
 
     result = say("\n\nTyping...", thread_ts=thread_ts)
     ts = result["ts"]
