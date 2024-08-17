@@ -22,7 +22,7 @@ CHAT_UPDATE_INTERVAL_SEC = 1
 load_dotenv()
 
 # 로그
-# SlackRequestHandler.clear_all_log_handlers()
+SlackRequestHandler.clear_all_log_handlers()
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(filename)s:%(lineno)d %(message)s",
 )
@@ -52,7 +52,7 @@ class SlackStreamingCallbackHandler(BaseCallbackHandler):
         now = time.time()
         if now - self.last_send_time > self.interval:
             app.client.chat_update(
-                channel=self.channel, ts=self.ts, text=f"{self.message}\n\nTyping..."
+                channel=self.channel, ts=self.ts, text=f"{self.message}\n\n작성 중..."
             )
             self.last_send_time = now
             self.update_count += 1
@@ -77,7 +77,7 @@ class SlackStreamingCallbackHandler(BaseCallbackHandler):
         )
 
 
-@app.event("app_mention")
+# @app.event("app_mention")
 def handle_mention(event, say):
     channel = event["channel"]
     thread_ts = event["ts"]
@@ -88,7 +88,7 @@ def handle_mention(event, say):
     if "thread_ts" in event:
         id_ts = event["thread_ts"]
 
-    result = say("\n\nTyping...", thread_ts=thread_ts)
+    result = say("\n\n작성 중...", thread_ts=thread_ts)
     ts = result["ts"]
 
     history = MomentoChatMessageHistory.from_client_params(
