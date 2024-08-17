@@ -3,3 +3,7 @@
 venv
 .git
 .python-version
+node_modules
+.serverless
+package-lock.json
+package.json
